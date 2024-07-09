@@ -1,0 +1,957 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBXBBF96C5DCEB34822AAAB1BC6F066CD19">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">Tools</string>
+			<string name="ScriptGuid">{0A4ECA09-0073-43F3-BA5A-A8BB62CFE35D}</string>
+			<ProtectedString name="Source"><![CDATA[local Tools = {}
+Tools.enum = {
+	pattern = {
+		class = "__class",
+		singleton = "__singleton",
+		multiton = "__multiton",
+		abstract = "__abstract"
+	},
+	error = {
+		[404] = "[TOOLS ERROR 404]: Could not find constructor in class: ",
+		[501] = "[TOOLS ERROR 501]: Abstract class must be extended from non-abstract class | Class: ",
+		[502] = "[TOOLS ERROR 502]: Abstract function must be overrided by extended class | Class: "
+	}
+}
+
+Tools.abstract = function(object)
+	return error(Tools.enum.error[502] .. ( object and object.__name or "???"))
+end
+
+Tools.pass = function()
+	return
+end
+
+type toolType = {
+	enum : typeof(Tools.enum),
+	class : (name : string, super : {}, pattern : string) -> {},
+	abstract : (object : {}) -> nil,
+	pass : () -> nil
+}
+
+function Tools.__index(class, key)
+	return class.__extends and class.__super[key] or nil
+end
+
+function Tools.__abstract(class, ...)
+	return error(Tools.enum.error[501] .. class.__name)
+end
+
+function Tools.__class(class, ...)
+	local object = {}
+	local constructor = class[class.__name]
+	setmetatable(object, class)
+	return constructor and (constructor(object, ...) or true) and object or error(Tools.enum.error[404] .. class.__name)
+end
+
+function Tools.__singleton(class)
+	class.__singleton = class.__singleton or Tools.__class(class)
+	return class.__singleton
+end
+
+function Tools.__multiton(class, key)
+	class.__multiton = class.__multiton or {}
+	class.__multiton[key] = class.__multiton[key] or Tools.__class(class, key)
+	return class.__multiton[key]
+end
+
+function Tools.__call(class, ...)
+	return Tools[(class.__pattern or "__class")](class, ...)
+end
+
+function Tools.class(name, super, pattern)
+	local class = {}
+	class.__name = name
+	class.__super = super
+	class.__index = class
+	class.__pattern = pattern
+	class.__extends = (super and true) or false
+	class.new = function(...)
+		return Tools.__call(class, ...)
+	end
+	
+	if class.__extends then
+		class.super = {}
+		local meta = {}
+		meta.__call = function(self, ...)
+			class.__super[class.__super.__name](...)
+		end
+		meta.__index = class.__super
+		meta.__newindex = class.__super
+		setmetatable(class.super, meta)
+	end
+	
+	setmetatable(class, Tools)
+	
+	return class, class.__extends and class.super or nil
+end
+
+local typedTools : toolType = Tools
+return typedTools
+]]></ProtectedString>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBX81A0FD3A0B7147BF8D476F369AE032A3">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Core</string>
+				<string name="ScriptGuid">{2FC3656A-B3B1-4DDD-93A8-FA725411691B}</string>
+				<ProtectedString name="Source"><![CDATA[local module = {}
+
+local BaseClass = require(script:WaitForChild("BaseClass"))
+module.BaseClass = BaseClass
+export type BaseClass = BaseClass.type
+
+local DataStore = require(script:WaitForChild("DataStore"))
+module.DataStore = DataStore
+export type DataStore = DataStore.type
+
+local SaveStore = require(script:WaitForChild("DataStore"):WaitForChild("SaveStore"))
+module.SaveStore = SaveStore
+export type SaveStore = SaveStore.type
+
+local Event = require(script:WaitForChild("Event"))
+module.Event = Event
+export type Event = Event.type
+
+local Player = require(script:WaitForChild("Player"))
+module.Player = Player
+export type Player = Player.type
+
+local Server = require(script:WaitForChild("Server"))
+module.Server = Server
+export type Server = Server.type
+
+return module
+]]></ProtectedString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX6B0F1B074EB04EBAA0C165F1CEFE21ED">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">BaseClass</string>
+					<string name="ScriptGuid">{CEF7FB9A-7236-467A-B036-130BF94BEE83}</string>
+					<ProtectedString name="Source"><![CDATA[local Tools = require(script:FindFirstAncestor("Tools"))
+export type type = {	
+	connections : {RBXScriptConnection},
+	
+	bind : (self : {}, event : RBXScriptSignal, key : string, func : (any) -> any) -> RBXScriptConnection,
+	bindOnce : (self : {}, event : RBXScriptSignal, key : string, func : (any) -> any) -> RBXScriptConnection,
+	destroy : (self : {}) -> nil,
+	unbind : (self : {}, key : string) -> nil
+} & Super.type
+export type class = {new : () -> type}
+local Class : class = Tools.class(script.Name)
+
+function Class.BaseClass(self : type)
+	self.connections = {}
+end
+
+function Class.bind(self : type, event : RBXScriptSignal, key, func)
+	func = func or self[key]
+	local connection : RBXScriptConnection = event:Connect(function(...)
+		return func(self, ...)
+	end)
+	self.connections[key] = connection
+	return connection
+end
+
+function Class.bindOnce(self : type, event : RBXScriptSignal, key, func)
+	func = func or self[key]
+	local connection : RBXScriptConnection = event:Once(function(...)
+		self:unbind(key)
+		return func(self, ...)
+	end)
+	self.connections[key] = connection
+	return connection
+end
+
+function Class.destroy(self : type)
+	for i, connection : RBXScriptConnection in pairs(self.connections) do
+		connection:Disconnect()
+	end
+	table.clear(self.connections)
+end
+
+function Class.unbind(self : type, key)
+	local connection : RBXScriptConnection = self.connections[key]
+	self.connections[key] = connection and connection:Disconnect() or nil
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX67F64782E7114BCCA3DDF8C463137985">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Event</string>
+					<string name="ScriptGuid">{7BB82D4F-3DDD-4746-8D99-280EC82E1CFC}</string>
+					<ProtectedString name="Source"><![CDATA[local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent:WaitForChild("BaseClass"))
+export type type = {
+	bindableEvent : BindableEvent,
+	signal: RBXScriptSignal	,
+	
+	connect : (self : {}, func : (any) -> any) -> RBXScriptConnection,
+	fire : (self : {}, ...any) -> nil,
+} & Extends.type
+export type class = {new : () -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends)
+
+function Class.Event(self : type)
+	super(self)
+	self.bindableEvent = Instance.new("BindableEvent")
+	self.signal = self.bindableEvent.Event
+end
+
+function Class.connect(self : type, func)
+	return self.signal:Connect(func)
+end
+
+function Class.destroy(self : type)
+	super.destroy(self)
+	self.bindableEvent:Destroy()
+	self.bindableEvent = nil
+	self.signal = nil
+end
+
+function Class.fire(self : type, ...)
+	self.bindableEvent:Fire(...)
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXF30E5925E8B4494ABA40F5E32E2E8000">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Server</string>
+					<string name="ScriptGuid">{259DA224-8DA0-47AD-9043-D4E86D3BB7FD}</string>
+					<ProtectedString name="Source"><![CDATA[local Players = game:GetService("Players")
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent:WaitForChild("BaseClass"))
+export type type = {
+	onJoin : (self : {}, player : Player) -> nil,
+	onLeave : (self : {}, player : Player) -> nil
+} & Extends.type
+export type class = {new : () -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends, Tools.enum.pattern.abstract)
+
+function Class.Server(self : type)
+	super(self)
+	
+	self:bind(Players.PlayerAdded, "onJoin")
+	self:bind(Players.PlayerRemoving, "onLeave")
+end
+
+Class.onJoin = Tools.abstract
+Class.onLeave = Tools.abstract
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXC723A921B448463D9AA84D61E6A2EBAC">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Player</string>
+					<string name="ScriptGuid">{8E0ECB65-7299-4E84-BEF4-8D504AC09F4F}</string>
+					<ProtectedString name="Source"><![CDATA[local RunService = game:GetService("RunService")
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent:WaitForChild("BaseClass"))
+export type type = {
+	character : Model?,
+	player : Player,
+	
+	onDeath : (self : {}) -> nil,
+	onSpawn : (self : {}, character : Model) -> nil,
+	onSpawnStepped : (self : {}, character : Model) -> nil,
+	spawn : (self : {}, description : HumanoidDescription?) -> nil
+} & Extends.type
+export type class = {new : (player : Player) -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends, Tools.enum.pattern.abstract)
+
+function Class.Player(self : type, player : Player)
+	super(self)
+	self.character = nil
+	self.player = player
+	
+	self:bind(player.CharacterRemoving, "onDespawn")
+	self:bind(player.CharacterAdded, "onSpawn")
+	self:bind(player.CharacterAdded, "onSpawnStepped", function(...)
+		RunService.Heartbeat:Wait()
+		return self.onSpawnStepped(...)
+	end)
+	self:bind(player.CharacterAdded, "getCharacter", function(self : type, character)
+		self.character = character
+		local humanoid : Humanoid = character:WaitForChild("Humanoid")
+		self:bindOnce(humanoid.Died, "onDeath")
+	end)
+end
+
+Class.onDeath = Tools.abstract
+Class.onDespawn = Tools.abstract
+Class.onSpawn = Tools.abstract
+Class.onSpawnStepped = Tools.abstract
+
+function Class.spawn(self : type, description : HumanoidDescription?)
+	if not description then
+		self.player:LoadCharacter()
+	else
+		self.player:LoadCharacterWithHumanoidDescription(description)
+	end
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX0FC61DCBE9DE47AA92398AF2EDC01209">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">DataStore</string>
+					<string name="ScriptGuid">{C65B4E6C-AC55-4E28-B822-BF5022FDBA5F}</string>
+					<ProtectedString name="Source"><![CDATA[local DataStoreService = game:GetService("DataStoreService")
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent:WaitForChild("BaseClass"))
+export type type = {
+	dataStoreName : string,
+	dataStore : DataStore,
+	
+	get : (self : {}, key : string) -> (boolean, any),
+	set : (self : {}, key : string, value : any) -> (boolean, any),
+	update : (self : {}, key : string, func : (any) -> any) -> (boolean, any)
+} & Extends.type
+export type class = {new : (dataStoreName : string) -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends, Tools.enum.pattern.class)
+
+function Class.DataStore(self : type, dataStoreName : string)
+	super(self)
+	self.dataStoreName = dataStoreName
+	self.dataStore = DataStoreService:GetDataStore(dataStoreName)
+end
+
+function Class.get(self : type, key : string)
+	return pcall(function()
+		return self.dataStore:GetAsync(key)
+	end)
+end
+
+function Class.set(self : type, key : string, value : any)
+	return pcall(function()
+		return self.dataStore:SetAsync(key)
+	end)
+end
+
+function Class.update(self : type, key : string, func)
+	return pcall(function()
+		return self.dataStore:UpdateAsync(key, func)
+	end)
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBXA134BCC4826A46258AD7EDD69E270807">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">SaveStore</string>
+						<string name="ScriptGuid">{3259864C-EE79-4EC4-972B-B9544CE53D60}</string>
+						<ProtectedString name="Source"><![CDATA[local Event = require(script.Parent.Parent.Parent:WaitForChild("Core"):WaitForChild("Event"))
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent)
+export type type = {
+	autoSave : Event.type,
+	autoSaveFrequency : number,
+	sessionLockLimit : number,
+	
+	close : (self : {}, key : string, value : any) -> (boolean, any),
+	open : (self : {}, key : string) -> (boolean, any),
+	save : (self : {}, key : string, value : any) -> (boolean, any)
+} & Extends.type
+export type class = {new : (dataStoreName : string) -> type} & Extends.class
+local Class : class, super : Extends.type = Tools.class(script.Name, Extends, Tools.enum.pattern.class)
+
+type saveStoreReturnType = {
+	data : {}?,
+	session : number?,
+	sessionLock : number?
+}
+
+function Class.SaveStore(self : type, dataStoreName : string)
+	super(self, dataStoreName)
+	self.autoSave = Event.new()
+	self.autoSaveFrequency = 60
+	self.sessionLockLimit = 120
+	
+	task.spawn(function()
+		while task.wait(self.autoSaveFrequency) do
+			self.autoSave:fire()
+		end
+	end)
+end
+
+function Class.close(self : type, key : string, data : any)
+	local unlocked = true
+	local closeResult = ""
+	local success, result = self:update(key, function(old : saveStoreReturnType?)
+		if (not old) or (not old.session) or (not old.sessionLock) or (old.session == game.JobId) or (os.time() - old.sessionLock) >= self.sessionLockLimit then
+			old.data = data
+			old.session = nil
+			old.sessionLock = nil
+		else
+			unlocked = false
+			closeResult = "Session is locked | " .. (os.time() - old.sessionLock)
+		end
+		return old
+	end)
+
+	local closeSuccess = success and unlocked
+	closeResult = (not success or closeSuccess) and result or closeResult
+	return closeSuccess, closeResult
+end
+
+function Class.open(self : type, key : string)
+	local unlocked = true
+	local loadResult = ""
+	local success, result = self:update(key, function(old : saveStoreReturnType?)
+		if not old then
+			old = {}
+			old.sessionLock = os.time()
+			old.session = game.JobId
+		elseif not old.sessionLock or (old.sessionLock and (os.time() - old.sessionLock) >= self.sessionLockLimit) then
+			old.sessionLock = os.time()
+			old.session = game.JobId
+		else
+			unlocked = false
+			loadResult = "Session is locked | " .. (os.time() - old.sessionLock)
+		end
+
+		return old
+	end)
+
+	local loadSuccess = success and unlocked
+	loadResult = (not success or loadSuccess) and result or loadResult
+	return loadSuccess, (loadSuccess and loadResult.data or loadResult)
+end
+
+function Class.save(self : type, key, data)
+	local unlocked = true
+	local saveResult = ""
+	local success, result = self:update(key, function(old : saveStoreReturnType?)
+		if (not old) or (not old.session) or (not old.sessionLock) or (old.session == game.JobId) or (os.time() - old.sessionLock) >= self.sessionLockLimit then
+			old.data = data
+			old.session = game.JobId
+			old.sessionLock = os.time()
+		else
+			unlocked = false
+			saveResult = "Session is locked | " .. (os.time() - old.sessionLock)
+		end
+		return old
+	end)
+
+	local saveSuccess = success and unlocked
+	saveResult = (not success or saveSuccess) and result or saveResult
+	return saveSuccess, saveResult
+end
+
+return Class
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="ModuleScript" referent="RBX21ABA3DCEEBC49648DB6A5DDE1F9F3C9">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">ClientCore</string>
+				<string name="ScriptGuid">{A5B0DCDB-5C7D-402C-96FD-E519B71F231E}</string>
+				<ProtectedString name="Source"><![CDATA[local module = {}
+
+local Camera = require(script:WaitForChild("Camera"))
+module.Camera = Camera
+export type Camera = Camera.type
+
+local FirstPerson = require(script:WaitForChild("Camera"):WaitForChild("FirstPerson"))
+module.FirstPerson = FirstPerson
+export type FirstPerson = FirstPerson.type
+
+local SmoothThirdPerson = require(script:WaitForChild("Camera"):WaitForChild("SmoothThirdPerson"))
+module.SmoothThirdPerson = SmoothThirdPerson
+export type SmoothThirdPerson = SmoothThirdPerson.type
+
+local Client = require(script:WaitForChild("Client"))
+module.Client = Client
+export type Client = Client.type
+
+local Screen = require(script:WaitForChild("Screen"))
+module.Screen = Screen
+export type Screen = Screen.type
+
+return module
+]]></ProtectedString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX17A9C5235C544F9DB6F58F59605F43F2">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Camera</string>
+					<string name="ScriptGuid">{E3125782-4B62-419C-A010-29B1A1036C96}</string>
+					<ProtectedString name="Source"><![CDATA[local Tools = require(script:FindFirstAncestor("Tools")) 
+local Extends = require(script.Parent.Parent:WaitForChild("Core"):WaitForChild("BaseClass"))
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local playerModule = require(Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"))
+local controls = playerModule:GetControls()
+
+export type type = {
+	camera : Camera,
+	cameraType : Enum.CameraType,
+	mouseBehavior : Enum.MouseBehavior,
+	mouseVisible : boolean,
+	playerControllerEnabled : boolean,
+	
+	onCameraTypeChanged : (self : {}) -> nil,
+	setCameraType : (self : {}, cameraType : Enum.CameraType) -> nil,
+	setMouseBehavior : (self : type, mouseBehavior : Enum.MouseBehavior) -> nil
+} & Extends.type
+export type class = {new : () -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends)
+
+function Class.Camera(self : type, camera : Camera?)
+	super(self)
+	self.playerControllerEnabled = true
+	self.mouseBehavior = Enum.MouseBehavior.Default
+	UserInputService.MouseBehavior = self.mouseBehavior
+	self.mouseVisible = true
+	self.camera = camera or Instance.new("Camera")
+	self.camera.Parent = workspace
+	self.cameraType = self.camera.CameraType
+	local cameraTypeChangedEvent = self.camera:GetPropertyChangedSignal("CameraType")
+	self:bind(cameraTypeChangedEvent, "cameraTypeChanged", self.onCameraTypeChanged)
+	self:bind(RunService.RenderStepped, "onRender", self.onStep)
+end
+
+function Class.onStep(self : type, delta : number)
+	if workspace.CurrentCamera == self.camera then
+		UserInputService.MouseIconEnabled = self.mouseVisible
+		if self.playerControllerEnabled then
+			controls:Enable()
+		else
+			controls:Disable()
+		end
+	end
+end
+
+function Class.onCameraTypeChanged(self : type)
+	local newType = self.camera.CameraType
+	if newType ~= self.cameraType then
+		self.camera.CameraType = self.cameraType
+	end
+end
+
+function Class.setCameraType(self : type, cameraType : Enum.CameraType)
+	self.cameraType = cameraType
+	self.camera.CameraType = self.cameraType	
+end
+
+function Class.setMouseBehavior(self : type, mouseBehavior : Enum.MouseBehavior)
+	self.mouseBehavior = mouseBehavior
+	UserInputService.MouseBehavior = self.mouseBehavior
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX6F5501A08AB242CF8BF063D4AFD30ACA">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">FirstPerson</string>
+						<string name="ScriptGuid">{9715924B-A5C1-4C25-94F5-43E0F8D2C421}</string>
+						<ProtectedString name="Source"><![CDATA[local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local Tools = require(script:FindFirstAncestor("Tools")) 
+local Extends = require(script.Parent)
+export type type = {
+	pitch : Attachment,
+	pivot : Attachment,
+	root : Part,
+	head : Part,
+	xDelta : number,
+	yDelta : number,
+	targetLook : Vector3,
+	tilt : number
+} & Extends.type
+export type class = {new : (camera : Camera?) -> type} & Extends.class
+local Class : class, super : Extends.type = Tools.class(script.Name, Extends)
+
+local player = game.Players.LocalPlayer
+
+function Class.FirstPerson(self : type, camera : Camera?)
+	super(self, camera or Instance.new("Camera"))
+	self.character = {}
+	self.character.arms = {"RightUpperArm", "RightLowerArm", "RightHand", "LeftUpperArm", "LeftLowerArm", "LeftHand"}
+	self.character.legs = {"RightUpperLeg", "RightLowerLeg", "RightFoot", "LeftUpperLeg", "LeftLowerLeg", "LeftFoot"}
+	self.character.body = {"UpperTorso", "LowerTorso", "HumanoidRootPart"}
+	self:setCameraType(Enum.CameraType.Scriptable)
+	self:setMouseBehavior(Enum.MouseBehavior.LockCenter)
+	self.camera.FieldOfView = 85
+	self:bind(player.CharacterAdded, "characterAdded", self.onCharacterAdded)
+	if player.Character then self:onCharacterAdded(player.Character) end
+end
+
+function Class.onCharacterAdded(self : type, character : Model)
+	self.root = character:WaitForChild("HumanoidRootPart")
+	self.head = character:WaitForChild("Head")
+	self.pivot = Instance.new("Attachment")
+	self.pivot.Parent = self.root
+	self.pivot.Position = Vector3.new(0,1.25,-.75)
+	self.xDelta = 0
+	self.yDelta = 0
+	self.tilt = 0
+	local torso : Part = character:WaitForChild("UpperTorso")
+	local lowtorso : Part = character:WaitForChild("LowerTorso")
+	for l, legPartName : string in pairs(self.character.legs) do
+		character:WaitForChild(legPartName).Transparency = 1
+	end
+	for l, armPartName : string in pairs(self.character.legs) do
+		character:WaitForChild(armPartName).CastShadow = false
+	end
+	self.head:WaitForChild("face").Transparency = 1
+	local children = character:GetDescendants()
+	for c, child in ipairs(children) do
+		if child:IsA("Accessory") and not child:GetAttribute("FirstPersonVisible") then child:Destroy() end
+	end
+	local lowtorso : Part = character:WaitForChild("LowerTorso")
+	self.head.Transparency = 1
+	torso.Transparency = 1
+	lowtorso.Transparency = 1
+end
+
+function Class.calculateTile(self : type, x, y, delta)
+	self.tilt = math.clamp(self.tilt + (x/8), -50, 50) * .9
+	self.tilt = math.abs(self.tilt) < .1 and 0 or self.tilt
+end
+
+function Class.calculateDeltas(self : type, x, y)
+	self.xDelta += (x / 14) * 5
+	self.yDelta += (y / 10) * 5
+	if self.xDelta >= 360 then self.xDelta -= 360 elseif self.xDelta < 0 then self.xDelta += 360 end
+	if self.yDelta > 75 then self.yDelta = 75 elseif self.yDelta < -75 then self.yDelta = -75 end
+end
+
+function Class.onStep(self : type, deltaT : number)
+	super.onStep(self, deltaT)
+	if self.pivot and self.root then
+		local delta = workspace.CurrentCamera == self.camera and UserInputService:GetMouseDelta() or Vector2.zero
+		local x, y = -delta.X, -delta.Y
+		self:calculateTile(x, y, deltaT)
+		self:calculateDeltas(x, y)
+		local lookFrame = CFrame.new(Vector3.new(0,0,0))
+		lookFrame *= CFrame.Angles(0, math.rad(self.xDelta), 0)
+		lookFrame *= CFrame.Angles(math.rad(self.yDelta), 0, 0)
+		self.targetLook = lookFrame.LookVector
+		self.pivot.CFrame = CFrame.lookAt(self.pivot.CFrame.Position, self.pivot.CFrame.Position + self.pivot.CFrame.LookVector) 
+		local xzLook = self.pivot.CFrame.LookVector
+		xzLook = Vector3.new(xzLook.X, 0, xzLook.Z)
+		self.root.CFrame = CFrame.lookAt(self.root.CFrame.Position, self.root.CFrame.Position + xzLook)	
+		local targetPos = self.pivot.CFrame.Position
+		local target = CFrame.lookAt(targetPos, targetPos + self.targetLook)
+		TweenService:Create(self.pivot, TweenInfo.new(.25, Enum.EasingStyle.Quart), {CFrame = target}):Play()
+		local cameraCFrame = CFrame.lookAt(self.pivot.WorldCFrame.Position, self.pivot.WorldCFrame.Position + self.pivot.CFrame.LookVector, self.pivot.CFrame.UpVector)
+		cameraCFrame *= CFrame.Angles(0, 0, math.rad(self.tilt / 6))
+		self.camera.CFrame = cameraCFrame
+	end
+end
+
+return Class]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX47868C3180764C9295D5830D57B12E89">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">SmoothThirdPerson</string>
+						<string name="ScriptGuid">{EBD1B298-D2E9-432D-9003-0CADABC675BE}</string>
+						<ProtectedString name="Source"><![CDATA[local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent)
+export type type = {
+	target : BasePart,
+	subject : Part,
+	loaded : boolean
+} & Extends.type
+export type class = {new : () -> type} & Extends.class
+local Class : class, super : Extends.type = Tools.class(script.Name, Extends, Tools.enum.pattern.class)
+
+function Class.SmoothThirdPerson(self : type, camera : Camera?)
+	super(self, camera or Instance.new("Camera"))
+	self.subject = Instance.new("Part")
+	self.subject.CanCollide = false
+	self.subject.Size = Vector3.new(1,1,1)
+	self.subject.Transparency = 1
+	self.subject.Anchored = true
+	self.camera.CameraSubject = self.subject
+	self.loaded = false
+	self:setCameraType(Enum.CameraType.Custom)
+end
+
+function Class.onStep(self : type, delta : number)
+	super.onStep(self, delta)
+	local character = player.Character
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart") or nil
+	if self.target ~= root then
+		self.loaded = false
+	end
+	self.target = root
+	if self.target then
+		if not self.loaded then
+			self.loaded = true
+			self.subject.CFrame = self.target.CFrame
+		end
+		self.subject.Parent = workspace
+		self.camera.CameraSubject = self.subject
+		TweenService:Create(self.subject, TweenInfo.new(.085), {CFrame = self.target.CFrame + Vector3.new(0,1,0)}):Play()
+	end
+end
+
+return Class
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="ModuleScript" referent="RBX63F3E4767AD04B38A864B4866BC61C97">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Screen</string>
+					<string name="ScriptGuid">{74909F84-81DF-42BB-AF35-8FE07C409AA4}</string>
+					<ProtectedString name="Source"><![CDATA[local Players = game:GetService("Players")
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent.Parent:WaitForChild("Core"):WaitForChild("BaseClass"))
+export type type = {
+	base : ScreenGui,
+	gui : ScreenGui,
+	resetOnDespawn : boolean,
+	removeOnDespawn : boolean,
+	
+	hide : (self : {}) -> nil,
+	onCharacterRemoving : (self : {}, character : Model) -> nil,
+	show : (self : {}) -> nil,
+	toggle : (self : {}) -> nil
+} & Extends.type
+export type class = {new : (screen : ScreenGui) -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends)
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+function Class.Screen(self : type, screenGui : ScreenGui)
+	super(self)
+	self.base = screenGui
+	self.gui = screenGui:Clone()
+	self.gui.Parent = playerGui
+	self.gui.ResetOnSpawn = false
+	self.removeOnDespawn = false
+	self.resetOnDespawn = true
+	self:bind(player.CharacterRemoving, "onCharacterRemoving")
+end
+
+function Class.onCharacterRemoving(self : type, character : Model)
+	if self.removeOnDespawn then
+		self.gui:Destroy()
+	elseif self.resetOnDespawn then
+		self.gui:Destroy()
+		self.gui = self.base:Clone()
+		self.gui.Parent = playerGui
+	end
+end
+
+function Class.hide(self : type)
+	self.gui.Enabled = false
+end
+
+function Class.show(self : type)
+	self.gui.Enabled = true
+end
+
+function Class.toggle(self : type)
+	return self.gui.Enabled and (self:hide() or true) or self:show()
+end
+
+function Class.destroy(self : type)
+	super.destroy(self)
+	self.gui:Destroy()
+	self.gui = nil
+	self.base = nil
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX7332DCCFA37F4354817F13FA71847025">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Client</string>
+					<string name="ScriptGuid">{8D0F9BFB-807D-45FC-8B17-F83584BFE8AA}</string>
+					<ProtectedString name="Source"><![CDATA[local Players = game:GetService("Players")
+
+local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = require(script.Parent.Parent:WaitForChild("Core"):WaitForChild("BaseClass"))
+export type type = {
+	character : Model?,
+	
+	loadAnimation : (self : {}, animation : Animation) -> AnimationTrack,
+	onDeath : (self : {}) -> nil,
+	onDespawn : (self : {}, character : Model) -> nil,
+	onSpawn : (self : {}, character : Model) -> nil,
+	onSpawnStepped : (self : {}, character : Model) -> nil
+} & Extends.type
+export type class = {new : (screen : ScreenGui) -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends, Tools.enum.pattern.abstract)
+
+local player = Players.LocalPlayer
+
+function Class.Client(self : type, screenGui : ScreenGui)
+	super(self)
+	
+	self:bind(player.CharacterAdded, "getCharacter", function(self : type, character)
+		self.character = character
+		local humanoid : Humanoid = character:WaitForChild("Humanoid")
+		self:bindOnce(humanoid.Died, "onDeath")
+	end)
+	self:bind(player.CharacterRemoving, "onDespawn")
+	self:bind(player.CharacterAdded, "onSpawn")
+end
+
+Class.onDeath = Tools.abstract
+Class.onDespawn = Tools.abstract
+Class.onSpawn = Tools.abstract
+Class.onSpawnStepped = Tools.abstract
+
+function Class.loadAnimation(self : type, animation : Animation)
+	local character = self.character or player.CharacterAdded:Wait()
+	local humanoid : Humanoid = character:WaitForChild("Humanoid")
+	local animator : Animator = humanoid:WaitForChild("Animator")
+	local track = animator:LoadAnimation(animation)
+	return track
+end
+
+return Class
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="ModuleScript" referent="RBX960044ABEDFA48509F1E58BD75F79FCD">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Template</string>
+				<string name="ScriptGuid">{C6F7105F-2208-4702-99A7-35B0BA3A5528}</string>
+				<ProtectedString name="Source"><![CDATA[local Tools = require(game.ReplicatedStorage.Tools)
+local Extends = nil
+export type type = {} & Extends.type
+export type class = {new : () -> type} & Extends.class
+local Class : class, super = Tools.class(script.Name, Extends, Tools.enum.pattern.class)
+
+function Class.Template(self : type)
+	
+end
+
+return Class
+]]></ProtectedString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
