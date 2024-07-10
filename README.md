@@ -3,11 +3,11 @@
 ## What is T.O.O.L.S.?
 T.O.O.L.S. (Tools) stands for *"Typed Object-Oriented Lua System/Standard"*.
 
-Tools is a ModuleScript that includes functionality for the Object Oriented Programming (**OOP**) paradigm for Roblox Studio.
+Tools is a ModuleScript that introduces Object Oriented Programming (**OOP**) paradigm to Roblox Studio.
 
 ## Why would I want to use Tools?
 
-### Tools adds OOP to Roblox Studio, and OOP has many benefits when developing:
+### OOP has many benefits when developing:
 - Organization/Scalability
 - Better Code Quality
 - Better Productivity
@@ -17,7 +17,7 @@ Tools is a ModuleScript that includes functionality for the Object Oriented Prog
 - Inheritance (Includes Typed inheritance)
 - Design patterns (Singleton, Multiton, Abstract)
   
-### Tools comes equipped with two code packages that include helpful Classes such as:
+### Tools includes packages that include helpful Classes:
 - Signal Connection Handlers (Helps mitigate memory leaks)
 - Session Locked Data Stores with Auto Saving (SaveStores)
 - Camera wrapper class for easier camera manipulation
@@ -41,10 +41,10 @@ There are two ways you can add Tools to your Roblox Studio
 ### Tools.RBXMX file (Recommended):
 1. Find the Tools.RBXMX file within the GitHub Repository
 2. In Roblox Studio right-click ReplicatedStorage, and choose "Insert from file..."
-3. select the downloaded RBXMX file to insert Tools into Roblox Studio
+3. Select the downloaded RBXMX file to insert Tools into Roblox Studio
 
-### Roblox Creator Store:
-1. Find the Roblox Script on the Creator Store here: Link W.I.P. (Disclaimer: might not be updated to the newest version, compare versions first)
+### Roblox Creator Store (Disclaimer: might not be updated to the newest version, compare versions first):
+1. Find the Roblox Script on the Creator Store here: https://create.roblox.com/store/asset/18415201971/Tools-v100 
 2. On the creator store page press the "Get Model" Button
 3. On Roblox Studio, under the view tab, open the Toolbox panel
 4. Within your models, locate the Tools Model and click it to add it to Roblox Studio
