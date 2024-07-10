@@ -1,7 +1,9 @@
 version: 2
 
-sphinx:
-  configuration: docs/conf.py
+# Build all formats
+formats: all
 
- formats:
-    - pdf
+sphinx:
+  builder: html
+  configuration: docs/conf.py
+  fail_on_warning: true
