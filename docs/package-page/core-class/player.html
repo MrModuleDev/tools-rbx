@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tools Player</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="icon" href="../../icon.png">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../index.html"><img src="../../icon.png" alt="Tools Logo" width="auto" height="100%"></a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="../../index.html">Home</a></li>
+      <li class="active"><a href="../../packages.html">Packages</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <p><a href="../core.html">Return to Core Package</a><p>
+  <h1><b>Player</b></h1>
+  <hr>
+  <h4>Extends From: <a href="base-class.html">BaseClass</a></h4>
+  <h4>Design Pattern: Abstract</h4>
+  <div class="alert alert-warning" role="alert">
+  This class is an Abstract class. You cannot create instances directly from this class. This class is meant to be extended from another class.
+  </div>
+  <br>
+
+  <h3><b>Constructor</b></h3>
+  <hr>
+  <h4>Player(player : Player)</h4>
+  <p>Parameters</p>
+  <ul>
+    <li>player</li>
+  </ul>
+  <br>
+
+  <h3><b>Properties</b></h3>
+  <hr>
+  <ul>
+    <li><h4>character : Model?</h4></li>
+    <p></p>
+    <li><h4>player : Player</h4></li>
+    <p></p>
+  </ul>
+  <br>
+  <h3><b>Binded Abstract Functions</b></h3>
+  <hr>
+  <div class="alert alert-warning" role="alert">
+  These functions are binded. They are connected to events when the instance is created.
+  </div>
+  <div class="alert alert-warning" role="alert">
+  These functions are abstract. They are meant to be overriden by an extending class.
+  </div>
+  <ul>
+    <li><h4>:onDeath()</h4></li>
+    <p> </p>
+    <p>Bind: self.character.Humanoid.Died</p>
+    <p><i>No Parameters</i></p>
+    <ul>
+    </ul>
+    <p>Returns: nil</p>
+    <br>
+    <li><h4>:onSpawn(character : Model)</h4></li>
+    <p></p>
+    <p>Bind: self.player.CharacterAdded</p>
+    <p>Parameters:</p>
+    <ul>
+      <li>character</li>
+    </ul>
+    <p>Returns:nil</p>
+    <br>
+    <li><h4>:onSpawnStepped(character : Model)</h4></li>
+    <p></p>
+    <p>Bind: self.character.Humanoid.CharacterAdded</p>
+    <p>Parameters:</p>
+    <ul>
+      <li>character</li>
+    </ul>
+    <p>Returns: nil</p>
+</ul>
+    <br>
+    <h3><b>Functions</b></h3>
+    <hr>
+    <ul>
+    <li><h4>:spawn(description : HumanoidDescription)</h4></li>
+    <p></p>
+    <p>Parameters</p>
+    <ul>
+      <li>description</li>
+    </ul>
+    <p>Returns: nil</p>
+  </ul>
+</div>
+
+</body>
+</html>

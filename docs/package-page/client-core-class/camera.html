@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tools Camera</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="icon" href="../../icon.png">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../index.html"><img src="../../icon.png" alt="Tools Logo" width="auto" height="100%"></a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="../../index.html">Home</a></li>
+      <li class="active"><a href="../../packages.html">Packages</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <p><a href="../client-core.html">Return to ClientCore Package</a><p>
+  <h1><b>Camera</b></h1>
+   <hr>
+  <h4>Extends From: <a href="../core-class/base-class.html">BaseClass</a></h4>
+  <h4>Design Pattern: Default</h4>
+  <br>
+ 
+  <h3><b>Constructor</b></h3>
+  <hr>
+  <h4>Camera(camera : Camera?)</h4>
+  <p>Parameters</p>
+  <ul>
+    <li>camera</li>
+  </ul>
+
+  <br>
+  <h3><b>Properties</b></h3>
+  <hr>
+  <ul>
+    <li><h4>camera : Camera</h4></li>
+    <p></p>
+    <li><h4>cameraType : Enum.CameraType</h4></li>
+    <p></p>
+    <li><h4>mouseBehavior : Enum.MouseBehavior</h4></li>
+    <p></p>
+    <li><h4>mouseVisible : boolean</h4></li>
+    <p></p>
+    <li><h4>playerControllerEnabled : boolean</h4></li>
+    <p></p>
+  </ul>
+  <br>
+
+  <h3><b>Binded Functions</b></h3>
+  <hr>
+  <div class="alert alert-warning" role="alert">
+  These functions are binded. They are connected to events when the instance is created.
+  </div>
+  <ul>
+    <li><h4>:onCameraTypeChanged()</h4></li>
+    <p> </p>
+    <p>Bind: self.camera:GetPropertyChangedSignal("CameraType")</p>
+    <p><i>No Parameters</i></p>
+    <ul>
+    </ul>
+    <p>Returns: nil</p>
+    <br>
+    <li><h4>:onStep(delta : number)</h4></li>
+    <p></p>
+     <p>Bind: RunService.RenderStepped</p>
+    <p>Parameters:</p>
+    <ul>
+      <li>delta</li>
+    </ul>
+    <p>Returns: nil</p>
+  </ul>
+  <br>
+  <h3><b>Functions</b></h3>
+  <hr>
+  <ul>
+    <li><h4>:setCameraType(cameraType : Enum.CameraType)</h4></li>
+    <p></p>
+    <p>Parameters:</p>  
+    <ul>
+      <li>cameraType</li>
+    </ul>
+    <p>Returns: nil</p>
+    <br>
+    <li><h4>:setMouseBehavior(mouseBehavior : Enum.MouseBehavior)</h4></li>
+    <p></p>
+    <p>Parameters:</p>  
+    <ul>
+      <li>mouseBehavior</li>
+    </ul>
+    <p>Returns: nil</p>
+  </ul>
+</div>
+
+</body>
+</html>

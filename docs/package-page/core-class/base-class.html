@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tools BaseClass</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="icon" href="../../icon.png">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../index.html"><img src="../../icon.png" alt="Tools Logo" width="auto" height="100%"></a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="../../index.html">Home</a></li>
+      <li class="active"><a href="../../packages.html">Packages</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <p><a href="../core.html">Return to Core Package</a><p>
+  <h1><b>BaseClass</b></h1>
+  <hr>
+  <h4>Extends From: nil</h4>
+  <h4>Design Pattern: Default</h4>
+  
+  <br>
+  <h3><b>Constructor</b></h3>
+  <hr>
+  <h4>BaseClass()</h4>
+  <p><i>No Parameters</i></p>
+  <ul>
+  </ul>
+  <br>
+
+  <h3><b>Properties</b></h3>
+  <hr>
+  <ul>
+    <li><h4>connections : {}</h4></p></li>
+    <p>A table that holds RBXConnection objects created from BaseClass:bind</p>
+  </ul>
+  
+  <br>
+  <h3><b>Functions</b></h3>
+  <hr>
+  <ul>
+    <li><h4>:bind(signal : RBXScriptSignal, key : string, function : (any) -> any)</h4></p></li>
+    <p>Connects a function to a specified RBXScriptSignal object and stores the RBXConnection to BaseClass.connections using the key to index</p>
+    <p>Parameters:</p>
+    <ul>
+      <li>signal</li>
+      <li>key</li>
+      <li>function</li>
+    </ul>
+    <p>Returns: RBXScriptConnection</p>
+    <br>
+    <li><h4>:bindOnce(signal : RBXScriptSignal, key : string, function : (any) -> any)</h4></li>
+    <p></p>
+    <p>Parameters:</p>
+    <ul>
+      <li>signal</li>
+      <li>key</li>
+      <li>function</li>
+    </ul>
+    <p>Returns: RBXScriptConnection</p>
+    <br>
+    <li><h4>:destroy()</h4></li>
+    <p></p>
+    <p><i>No Parameters</i></p>
+    <ul>
+      
+    </ul>
+    <p>Returns: nil</p>
+    <br>
+    <li><h4>:unbind(key : string)</h4></li>
+    <p>Disconnects and removes the RBXConnection in BaseClass.connections indexed by the key parameter</p>
+    <p>Parameters:</p>
+    <ul>
+      <li>key</li>
+    </ul>
+    <p>Returns: nil</p>
+  </ul>
+</div>
+
+</body>
+</html>

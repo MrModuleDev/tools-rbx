@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tools SaveStore</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="icon" href="../../icon.png">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../index.html"><img src="../../icon.png" alt="Tools Logo" width="auto" height="100%"></a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="../../index.html">Home</a></li>
+      <li class="active"><a href="../../packages.html">Packages</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <p><a href="../core.html">Return to Core Package</a><p>
+  <h1><b>SaveStore</b></h1>
+  <hr>
+  <h4>Extends From: <a href="datastore.html">DataStore</a></h4>
+  <h4>Design Pattern: Default</h4>
+  <br>
+
+  <h3><b>Constructor</b></h3>
+  <hr>
+  <h4>SaveStore(dataStoreName : string)</h4>
+  <p>Parameters</p>
+  <ul>
+    <li>dataStoreName</li>
+  </ul>
+  <br>
+
+  <h3><b>Properties</b></h3>
+  <hr>
+  <ul>
+    <li><h4>autoSave : boolean</h4></li>
+    <p></p>
+    <li><h4>autoSaveFrequency : number</h4></li>
+    <p></p>
+    <li><h4>sessionLockLimit : number</h4></li>
+    <p></p>
+  </ul>
+  <br>
+  <h3><b>Functions</b></h3>
+  <hr>
+  <ul>
+    <li><h4>:close(key : String, value : any)</h4></li>
+    <p></p>
+    <p>Returns: (success : boolean, result : any)</p>
+    <p>Parameters</p>
+    <ul>
+      <li>key</li>
+      <li>value</li>
+    </ul>
+    <br>
+    <li><h4>:open(key : String)</h4></li>
+    <p></p>
+    <p>Returns: (success : boolean, result : any)</p>
+    <p>Parameters</p>
+    <ul>
+      <li>key</li>
+    </ul>
+    <br>
+    <li><h4>:save(key : String, value : any)</h4></li>
+    <p></p>
+    <p>Returns: (success : boolean, result : any)</p>
+    <p>Parameters</p>
+    <ul>
+      <li>key</li>
+      <li>value</li>
+    </ul>
+  </ul>
+</div>
+
+</body>
+</html>
